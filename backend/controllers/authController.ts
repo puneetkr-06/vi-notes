@@ -7,7 +7,7 @@ import User, { IUser } from "../models/userModel";
 import AppError from "../utils/appError";
 import asyncHandler from "../utils/asyncHandler";
 import Email from "../utils/email";
-import { createSendToken } from "../utils/generateToken";
+import { createSendToken, getCookieOptions } from "../utils/generateToken";
 
 export const signup = asyncHandler(async (req, res, next) => {
   const newUser = await User.create({
@@ -50,10 +50,7 @@ export const login = asyncHandler(async (req, res, next) => {
 });
 
 export const logout = (req: Request, res: Response) => {
-  res.cookie("jwt", "loggedout", {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
+  res.clearCookie("jwt", getCookieOptions(req, 0));
   res.status(200).json({ status: "success" });
 };
 
